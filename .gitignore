@@ -1,5 +1,4 @@
 # dependencies
-node_modules
 /.pnp
 .pnp.js
 
@@ -7,3 +6,4 @@ node_modules
 build
 dist
 node_modules
+./node_modules
