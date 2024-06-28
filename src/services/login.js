@@ -1,8 +1,12 @@
 import axiosInstance from "../network/apiConfig";
 
 export async function login(body) {
-  const { data } = await axiosInstance.post("/auth/token", body);
-  return data;
+  try {
+    const { data } = await axiosInstance.post("/auth/token", body);
+    return data;
+  } catch (e) {
+    return { error: e.response.data.message };
+  }
 }
 
 export async function refreshAccessToken() {

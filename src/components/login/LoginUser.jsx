@@ -11,6 +11,7 @@ function LoginUser() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const getData = (e) => {
     const { value, name } = e.target;
@@ -77,11 +78,15 @@ function LoginUser() {
                     username: formValues.email,
                     password: formValues.password,
                   });
-                  console.log(token);
-                  localStorage.setItem("ip-tokens-access", token.access);
-                  localStorage.setItem("ip-tokens-refresh", token.refresh);
-                  navigate("/");
+                  if (token.error) {
+                    setError(token.error);
+                  } else {
+                    localStorage.setItem("ip-tokens-access", token.access);
+                    localStorage.setItem("ip-tokens-refresh", token.refresh);
+                    navigate("/");
+                  }
                 } catch (e) {
+                  setError(e.response.data.message);
                 } finally {
                   setLoading(false);
                 }
@@ -92,6 +97,7 @@ function LoginUser() {
                 <CircularProgress sx={{ mx: 2 }} size={20} color="info" />
               )}
             </Button>
+            {!!error && <p style={{ color: "red" }}>{error}</p>}
           </Box>
         </Box>
       </Container>
