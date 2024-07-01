@@ -30,8 +30,8 @@ axiosInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      // originalRequest._retry = true;
       const { data } = await refreshAccessToken();
       axios.defaults.headers.common["Authorization"] = "Bearer " + data.access;
       localStorage.setItem("ip-tokens-access", data.access);
