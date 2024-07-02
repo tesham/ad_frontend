@@ -72,24 +72,20 @@ function LoginUser() {
               }}
               onClick={async (e) => {
                 e.preventDefault();
-                try {
-                  setLoading(true);
-                  const token = await login({
-                    username: formValues.email,
-                    password: formValues.password,
-                  });
-                  if (token.error) {
-                    setError(token.error);
-                  } else {
-                    localStorage.setItem("ip-tokens-access", token.access);
-                    localStorage.setItem("ip-tokens-refresh", token.refresh);
-                    navigate("/");
-                  }
-                } catch (e) {
-                  setError(e.response.data.message);
-                } finally {
-                  setLoading(false);
+                setLoading(true);
+                const token = await login({
+                  username: formValues.email,
+                  password: formValues.password,
+                });
+                if (token.error) {
+                  setError(token.error);
+                } else {
+                  localStorage.setItem("ip-tokens-access", token.access);
+                  localStorage.setItem("ip-tokens-refresh", token.refresh);
+                  navigate("/");
                 }
+
+                setLoading(false);
               }}
             >
               {!loading && <span>Sign In</span>}

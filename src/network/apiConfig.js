@@ -1,5 +1,4 @@
 import axios from "axios";
-import { refreshAccessToken } from "../services/login";
 
 const axiosInstance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
@@ -30,9 +29,13 @@ axiosInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 403 && error.response.data.detail === "access_token expired" && !originalRequest._retry) {
       // originalRequest._retry = true;
-      const { data } = await refreshAccessToken();
+      
+      const tokens = localStorage.getItem("ip-tokens-refresh");
+      const { data } = await axios.post("http://127.0.0.1:8000/api/auth/token/refresh", {
+        refresh: tokens,
+      });
       axios.defaults.headers.common["Authorization"] = "Bearer " + data.access;
       localStorage.setItem("ip-tokens-access", data.access);
       return axiosInstance(originalRequest);
